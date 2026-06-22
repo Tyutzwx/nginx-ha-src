@@ -32,11 +32,7 @@ jobs:
           image-ref: ${{ env.REGISTRY }}/${{ env.HARBOR_PROJECT }}/${{ env.IMAGE_NAME }}:${{ env.SHORT_SHA }}
           format: 'table'
           exit-code: '0'
-        env:
-          TRIVY_DB_REPOSITORY: ghcr.io/aquasecurity/trivy-db          # 尝试用 GitHub 镜像
-          TRIVY_JAVA_DB_REPOSITORY: ghcr.io/aquasecurity/trivy-java-db
-          TRIVY_SKIP_DB_UPDATE: "true"       # 不下载最新漏洞库
-          TRIVY_SKIP_JAVA_DB_UPDATE: "true"  # 跳过 Java DB
+          extra-args: '--skip-db-update --skip-java-db-update'   # 强制跳过数据库和 Java DB 更新
 
       - name: Log in to Harbor
         run: echo "${{ secrets.HARBOR_PASSWORD }}" | docker login ${{ env.REGISTRY }} -u ${{ secrets.HARBOR_USERNAME }} --password-stdin
