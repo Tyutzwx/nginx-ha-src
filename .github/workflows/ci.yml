@@ -26,24 +26,26 @@ jobs:
         run: |
           docker build -t $REGISTRY/$HARBOR_PROJECT/$IMAGE_NAME:${{ env.SHORT_SHA }} .
 
-      - name: Install Trivy
-        run: |
-          sudo apt-get update && sudo apt-get install -y wget gnupg
-          wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
-          echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list.d/trivy.list
-          sudo apt-get update && sudo apt-get install -y trivy
-
-      - name: Run Trivy scan
-        continue-on-error: true          # 即使扫描失败，流水线也继续
-        env:
-          TRIVY_DB_REPOSITORY: ghcr.io/aquasecurity/trivy-db
-          TRIVY_JAVA_DB_REPOSITORY: ghcr.io/aquasecurity/trivy-java-db
-        run: |
-          trivy image \
-            --severity CRITICAL,HIGH \
-            --exit-code 0 \
-            --format table \
-            ${{ env.REGISTRY }}/${{ env.HARBOR_PROJECT }}/${{ env.IMAGE_NAME }}:${{ env.SHORT_SHA }} || true
+      # ---------- 安全扫描预留（因网络限制暂时注释）----------
+      # 在可出网的生产环境中，取消下面的注释即可启用 Trivy 漏洞扫描
+      # - name: Install Trivy
+      #   run: |
+      #     sudo apt-get update && sudo apt-get install -y wget gnupg
+      #     wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
+      #     echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list.d/trivy.list
+      #     sudo apt-get update && sudo apt-get install -y trivy
+      #
+      # - name: Run Trivy vulnerability scan
+      #   continue-on-error: true
+      #   env:
+      #     TRIVY_DB_REPOSITORY: ghcr.io/aquasecurity/trivy-db
+      #     TRIVY_JAVA_DB_REPOSITORY: ghcr.io/aquasecurity/trivy-java-db
+      #   run: |
+      #     trivy image \
+      #       --severity CRITICAL,HIGH \
+      #       --exit-code 1 \
+      #       --format table \
+      #       ${{ env.REGISTRY }}/${{ env.HARBOR_PROJECT }}/${{ env.IMAGE_NAME }}:${{ env.SHORT_SHA }}
 
       - name: Log in to Harbor
         run: echo "${{ secrets.HARBOR_PASSWORD }}" | docker login ${{ env.REGISTRY }} -u ${{ secrets.HARBOR_USERNAME }} --password-stdin
