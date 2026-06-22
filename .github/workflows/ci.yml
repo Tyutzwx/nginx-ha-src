@@ -34,7 +34,7 @@ jobs:
           exit-code: '1'
           severity: 'CRITICAL,HIGH'
           # 关键：跳过 Java DB 和漏洞库更新，避免网络下载
-          skip-db-update: 'true'
+          skip-setup-db: 'true'
           skip-java-db-update: 'true'
 
       - name: Log in to Harbor
