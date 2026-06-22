@@ -33,6 +33,8 @@ jobs:
           format: 'table'
           exit-code: '1'
           severity: 'CRITICAL,HIGH'
+        env: 
+          TRIVY_SKIP_JAVA_DB_UPDATE: "true"   # 跳过 Java DB 更新
 
       - name: Log in to Harbor
         run: echo "${{ secrets.HARBOR_PASSWORD }}" | docker login ${{ env.REGISTRY }} -u ${{ secrets.HARBOR_USERNAME }} --password-stdin
