@@ -35,7 +35,7 @@ jobs:
           severity: 'CRITICAL,HIGH'
           # 关键：跳过 Java DB 和漏洞库更新，避免网络下载
           skip-setup-db: 'true'
-          skip-java-db-update: 'true'
+          skip-java-setup: 'true'
 
       - name: Log in to Harbor
         run: echo "${{ secrets.HARBOR_PASSWORD }}" | docker login ${{ env.REGISTRY }} -u ${{ secrets.HARBOR_USERNAME }} --password-stdin
