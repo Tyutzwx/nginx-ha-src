@@ -27,7 +27,7 @@ jobs:
           docker build -t $REGISTRY/$HARBOR_PROJECT/$IMAGE_NAME:${{ env.SHORT_SHA }} .
 
       # ---------- 安全扫描预留（因网络限制暂时注释）----------
-      # 在可出网的生产环境中，取消下面的注释即可启用 Trivy 漏洞扫描
+      # 生产环境去掉下面行的 # 即可启用 Trivy 扫描
       # - name: Install Trivy
       #   run: |
       #     sudo apt-get update && sudo apt-get install -y wget gnupg
